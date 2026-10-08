@@ -1,0 +1,198 @@
+.home {
+  background: white;
+  color: #111;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 520px;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  padding: 70px 9%;
+  border-bottom: 1px solid #ddd;
+}
+
+.hero-content {
+  max-width: 700px;
+}
+
+.hero-small {
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hero h1 {
+  font-size: 58px;
+  line-height: 1.05;
+  margin: 18px 0;
+}
+
+.hero-content > p {
+  color: #555;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 13px 25px;
+  text-decoration: none;
+  border: 1px solid #111;
+}
+
+.primary-btn {
+  background: #111;
+  color: white;
+}
+
+.secondary-btn {
+  color: #111;
+  background: white;
+}
+
+/* SERVICES */
+
+.services {
+  padding: 70px 8%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.service-card {
+  border: 1px solid #ddd;
+  padding: 30px;
+  min-height: 230px;
+}
+
+.service-card h2 {
+  font-size: 20px;
+}
+
+.service-card p {
+  color: #666;
+  line-height: 1.6;
+  min-height: 75px;
+}
+
+.service-card a {
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* SECTIONS */
+
+.categories,
+.trending {
+  padding: 70px 8%;
+}
+
+.categories {
+  background: #f6f6f6;
+}
+
+.section-heading p {
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.section-heading h2 {
+  font-size: 34px;
+  margin-bottom: 35px;
+}
+
+/* CATEGORY */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+}
+
+.category-card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 25px 12px;
+  text-align: center;
+}
+
+.category-icon {
+  width: 55px;
+  height: 55px;
+  border: 1px solid #111;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.category-card p {
+  color: #777;
+  font-size: 12px;
+}
+
+/* PRODUCTS */
+
+.product-preview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.preview-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+}
+
+.preview-image {
+  height: 230px;
+  background: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+}
+
+.preview-card h3 {
+  font-size: 18px;
+}
+
+.preview-card a {
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 1000px) {
+  .services {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .services,
+  .category-grid,
+  .product-preview {
+    grid-template-columns: 1fr;
+  }
+}
