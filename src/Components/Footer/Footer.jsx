@@ -1,21 +1,19 @@
+
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
 function Footer() {
   return (
     <footer className="footer">
-
       <div className="footer-container">
-
         <div className="footer-about">
-          <Link to="/" className="footer-logo">
-            <span>R</span>
-            RecyConnect
+          <Link to="/" className="footer-logo" aria-label="RecyConnect home">
+            <span className="footer-logo-mark">R</span>
+            <span>RecyConnect</span>
           </Link>
 
           <p>
-            Turn Waste into Opportunity.
-            We connect people with sustainable
+            Turn Waste into Opportunity. We connect people with sustainable
             ways to buy, sell, recycle and reuse.
           </p>
         </div>
@@ -39,31 +37,51 @@ function Footer() {
 
         <div className="footer-column">
           <h3>Support</h3>
-          <a href="#">Help Center</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms</a>
+          <a href="mailto:support@recyconnect.com">Email Support</a>
+          <a href="mailto:support@recyconnect.com?subject=Contact%20RecyConnect">
+            Contact Us
+          </a>
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms &amp; Conditions</Link>
         </div>
 
-        <div className="footer-column">
+        <div className="footer-column footer-contact">
           <h3>Contact</h3>
-          <p>support@recyconnect.com</p>
+          <a href="mailto:support@recyconnect.com">
+            support@recyconnect.com
+          </a>
           <p>+91 90000 00000</p>
           <p>Hyderabad, India</p>
         </div>
-
       </div>
 
       <div className="footer-bottom">
         <p>© 2026 RecyConnect. All Rights Reserved.</p>
 
-        <div>
-          <a href="#">Instagram</a>
-          <a href="#">LinkedIn</a>
-          <a href="#">Facebook</a>
+        <div className="footer-socials" aria-label="Social media links">
+          <a
+            href="https://www.instagram.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Instagram
+          </a>
+          <a
+            href="https://www.linkedin.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="https://www.facebook.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Facebook
+          </a>
         </div>
       </div>
-
     </footer>
   );
 }

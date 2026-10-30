@@ -1,25 +1,106 @@
+
+/* RecyConnect - Global Theme */
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+  background: #ffffff;
+
+  --color-black: #111111;
+  --color-white: #ffffff;
+  --color-gray-100: #f7f7f7;
+  --color-gray-200: #eeeeee;
+  --color-gray-400: #aaaaaa;
+  --color-gray-600: #666666;
+  --color-border: #dddddd;
+
+  --container-width: 1400px;
+  --page-padding: clamp(20px, 5vw, 80px);
+  --radius-small: 6px;
+  --radius-medium: 12px;
+
+  --transition: 0.2s ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
-  color: #111;
-  background: #fff;
+  color: var(--color-black);
+  background: var(--color-white);
+  line-height: 1.6;
 }
 
 button,
 input,
 textarea,
 select {
-  font-family: inherit;
+  font: inherit;
 }
 
 button {
   cursor: pointer;
 }
 
+img,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+}
+
 a {
-  transition: 0.2s ease;
+  color: inherit;
+  transition: color var(--transition);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  color: var(--color-white);
+  background: var(--color-black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

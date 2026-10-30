@@ -1,0 +1,49 @@
+
+.recy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border: 1px solid #111;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.recy-button--primary {
+  background: #111;
+  color: #fff;
+}
+
+.recy-button--primary:hover:not(:disabled) {
+  background: #333;
+}
+
+.recy-button--secondary {
+  background: #fff;
+  color: #111;
+}
+
+.recy-button--secondary:hover:not(:disabled) {
+  background: #eee;
+}
+
+.recy-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.recy-button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .recy-button {
+    padding: 10px 16px;
+  }
+}

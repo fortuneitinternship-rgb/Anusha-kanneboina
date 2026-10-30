@@ -1,6 +1,7 @@
 .home {
-  background: white;
+  background: #fff;
   color: #111;
+  width: 100%;
 }
 
 /* HERO */
@@ -15,7 +16,7 @@
 }
 
 .hero-content {
-  max-width: 700px;
+  max-width: 760px;
 }
 
 .hero-small {
@@ -30,48 +31,349 @@
   margin: 18px 0;
 }
 
-.hero-content > p {
+.hero-content > p:not(.hero-small) {
   color: #555;
   font-size: 17px;
   line-height: 1.7;
 }
 
+/* HERO BUTTONS */
+
 .hero-buttons {
   display: flex;
-  gap: 15px;
-  margin-top: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 28px;
 }
 
-.primary-btn,
-.secondary-btn {
-  padding: 13px 25px;
+.hero-button-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.hero-button-row a {
+  min-width: 185px;
+  min-height: 58px;
+  padding: 16px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  text-align: center;
   text-decoration: none;
+  font-size: 16px;
   border: 1px solid #111;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.primary-btn {
+.hero-button-row .primary-btn {
   background: #111;
-  color: white;
+  color: #fff;
 }
 
-.secondary-btn {
+.hero-button-row .primary-btn:hover {
+  background: #333;
+}
+
+.hero-button-row .secondary-btn {
+  background: #fff;
   color: #111;
-  background: white;
+}
+
+.hero-button-row .secondary-btn:hover {
+  background: #111;
+  color: #fff;
+}
+
+/* SHARED SECTION STYLES */
+
+.promo-section,
+.benefits-section,
+.advantages-section {
+  padding: 30px 6%;
+}
+
+.section-heading {
+  margin-bottom: 20px;
+}
+
+.section-heading > p {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.section-heading h2 {
+  font-size: 30px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.section-heading > span {
+  display: block;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* PROMOTIONAL BANNER */
+
+.promo-section {
+  padding-top: 36px;
+  padding-bottom: 10px;
+}
+
+.promo-banner {
+  border: 1px solid #bbb;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  align-items: center;
+  gap: 36px;
+  background: #f8f8f8;
+}
+
+.promo-content {
+  min-width: 0;
+}
+
+.promo-label {
+  display: inline-block;
+  border: 1px solid #888;
+  padding: 5px 9px;
+  margin-bottom: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.promo-content h2 {
+  font-size: clamp(23px, 2.3vw, 34px);
+  line-height: 1.2;
+  margin: 0 0 12px;
+}
+
+.promo-content > p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 18px;
+}
+
+.promo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.promo-button:hover {
+  background: #333;
+}
+
+.promo-button span {
+  font-size: 18px;
+}
+
+/* COUNTDOWN TIMER */
+
+.promo-timer {
+  min-width: 0;
+  border: 1px solid #bbb;
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.timer-heading {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #666;
+  margin: 0 0 18px;
+}
+
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.timer-box {
+  border: 1px solid #ccc;
+  padding: 14px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.timer-box strong {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.timer-box span {
+  font-size: 12px;
+  color: #555;
+}
+
+.promo-code {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.promo-code strong {
+  padding: 9px 12px;
+  background: #eee;
+  border: 1px solid #ddd;
+}
+
+/* RECYCLING & SERVICE BENEFITS */
+
+.benefits-section {
+  padding-top: 28px;
+  padding-bottom: 30px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.benefit-card {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #d5d5d5;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.benefit-card:hover,
+.advantage-card:hover {
+  border-color: #777;
+}
+
+.benefit-icon {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #bbb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  margin-bottom: 16px;
+}
+
+.benefit-card h3 {
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 0 0 10px;
+}
+
+.benefit-card > p {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.65;
+  margin: 0 0 18px;
+}
+
+.benefit-detail {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+  color: #666;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+/* WHY CHOOSE RECYCONNECT */
+
+.advantages-section {
+  padding-top: 20px;
+  padding-bottom: 45px;
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.advantage-card {
+  border: 1px solid #d5d5d5;
+  padding: 18px;
+  min-width: 0;
+  transition: border-color 0.2s ease;
+}
+
+.advantage-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.advantage-top > span:first-child {
+  font-size: 9px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: #555;
+}
+
+.advantage-icon {
+  font-size: 20px;
+}
+
+.advantage-card h3 {
+  font-size: 17px;
+  margin: 0 0 7px;
+}
+
+.advantage-card > p {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* SERVICES */
 
 .services {
-  padding: 70px 8%;
+  padding: 60px 8%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
+  border-top: 1px solid #ddd;
 }
 
 .service-card {
   border: 1px solid #ddd;
-  padding: 30px;
-  min-height: 230px;
+  padding: 25px;
+  min-height: 220px;
 }
 
 .service-card h2 {
@@ -90,38 +392,34 @@
   font-weight: 600;
 }
 
-/* SECTIONS */
+.service-card a:hover {
+  text-decoration: underline;
+}
+
+/* CATEGORIES AND TRENDING */
 
 .categories,
 .trending {
-  padding: 70px 8%;
+  padding: 60px 8%;
 }
 
 .categories {
   background: #f6f6f6;
 }
 
-.section-heading p {
-  font-size: 11px;
-  letter-spacing: 2px;
-  font-weight: 700;
-}
-
 .section-heading h2 {
-  font-size: 34px;
-  margin-bottom: 35px;
+  font-size: 30px;
+  margin-bottom: 12px;
 }
-
-/* CATEGORY */
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 15px;
 }
 
 .category-card {
-  background: white;
+  background: #fff;
   border: 1px solid #ddd;
   padding: 25px 12px;
   text-align: center;
@@ -141,19 +439,21 @@
 .category-card p {
   color: #777;
   font-size: 12px;
+  line-height: 1.6;
 }
 
-/* PRODUCTS */
+/* TRENDING PRODUCTS */
 
 .product-preview {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 25px;
 }
 
 .preview-card {
   border: 1px solid #ddd;
   padding: 15px;
+  min-width: 0;
 }
 
 .preview-image {
@@ -175,24 +475,126 @@
   font-weight: 600;
 }
 
-@media (max-width: 1000px) {
+.preview-card a:hover {
+  text-decoration: underline;
+}
+
+/* TABLETS */
+
+@media (max-width: 1100px) {
+  .promo-banner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .benefits-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .services {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .category-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
+/* MOBILE */
+
 @media (max-width: 600px) {
+  .hero {
+    min-height: auto;
+    padding: 55px 6%;
+  }
+
   .hero h1 {
     font-size: 40px;
   }
 
+  .hero-content > p:not(.hero-small) {
+    font-size: 15px;
+  }
+
+  .hero-button-row {
+    gap: 10px;
+    width: 100%;
+  }
+
+  .hero-button-row a {
+    min-width: 0;
+    flex: 1;
+    padding: 13px 10px;
+    min-height: 50px;
+    font-size: 13px;
+  }
+
+  .promo-section,
+  .benefits-section,
+  .advantages-section {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .promo-banner {
+    padding: 18px;
+  }
+
+  .promo-content h2 {
+    font-size: 24px;
+  }
+
+  .promo-timer {
+    padding: 12px;
+  }
+
+  .timer-grid {
+    gap: 5px;
+  }
+
+  .timer-box {
+    padding: 12px 3px;
+  }
+
+  .timer-box strong {
+    font-size: 19px;
+  }
+
+  .timer-box span {
+    font-size: 10px;
+  }
+
+  .benefits-grid,
+  .advantages-grid,
   .services,
   .category-grid,
   .product-preview {
     grid-template-columns: 1fr;
+  }
+
+  .benefit-card {
+    padding: 20px;
+  }
+
+  .advantages-section .section-heading h2,
+  .benefits-section .section-heading h2 {
+    font-size: 25px;
+  }
+
+  .services,
+  .categories,
+  .trending {
+    padding: 40px 5%;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-button-row a,
+  .promo-button,
+  .benefit-card,
+  .advantage-card {
+    transition: none;
   }
 }
