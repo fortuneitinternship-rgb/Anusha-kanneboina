@@ -1,372 +1,183 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
-const initialTime = 2 * 86400 + 14 * 3600 + 38 * 60 + 45;
-
 function Home() {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((time) => Math.max(0, time - 1));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const days = Math.floor(timeLeft / 86400);
-  const hours = Math.floor((timeLeft % 86400) / 3600);
-  const minutes = Math.floor((timeLeft % 3600) / 60);
-  const seconds = timeLeft % 60;
-
-  const benefits = [
-    {
-      icon: "◷",
-      title: "1. Easy Recycling",
-      description:
-        "Book a slot in under 60 seconds. Plan your recycling and get started with ease.",
-      detail: "STATUS: EASY BOOKING",
-    },
-    {
-      icon: "♧",
-      title: "2. Convenient Pickup / Drop-off",
-      description:
-        "Find convenient collection options for recyclable materials and reusable products.",
-      detail: "SERVICE: FLEXIBLE OPTIONS",
-    },
-    {
-      icon: "✓",
-      title: "3. Trusted / Verified Process",
-      description:
-        "Clear product information and transparent processes help users make informed choices.",
-      detail: "FOCUS: TRANSPARENCY",
-    },
-    {
-      icon: "♻",
-      title: "4. Sustainable / Eco-friendly Value",
-      description:
-        "Give useful materials a second life and help reduce unnecessary waste.",
-      detail: "GOAL: LESS WASTE",
-    },
+  const services = [
+    { icon: "♻", title: "Sell / Recycle", description: "Turn recyclable waste into value through convenient recycling options.", link: "Get Started" },
+    { icon: "🛍", title: "Buy Refurbished", description: "Discover useful refurbished products and reusable materials.", link: "Shop Now" },
+    { icon: "♡", title: "Donate", description: "Give reusable products a second life by donating them.", link: "Donate Now" },
+    { icon: "⇄", title: "Exchange", description: "Exchange reusable products and materials with the community.", link: "Explore More" },
   ];
 
-  const advantages = [
-    {
-      icon: "▣",
-      label: "ADVANTAGE_01",
-      title: "Easy to Use",
-      description:
-        "Explore products and recycling options through a simple interface.",
-    },
-    {
-      icon: "✓",
-      label: "ADVANTAGE_02",
-      title: "Trusted Transactions",
-      description:
-        "Clear listings and transparent information help users make better decisions.",
-    },
-    {
-      icon: "♧",
-      label: "ADVANTAGE_03",
-      title: "Convenient Service",
-      description:
-        "Explore available options for selling, recycling, donating, and exchanging.",
-    },
-    {
-      icon: "♻",
-      label: "ADVANTAGE_04",
-      title: "Sustainable Choice",
-      description:
-        "Support reuse and recycling by helping useful materials stay in circulation.",
-    },
-    {
-      icon: "₹",
-      label: "ADVANTAGE_05",
-      title: "Fair Value",
-      description:
-        "Compare available products and listings before making a decision.",
-    },
-    {
-      icon: "◇",
-      label: "ADVANTAGE_06",
-      title: "Secure Process",
-      description:
-        "Keep product details clear and follow responsible practices when using the platform.",
-    },
+  const categories = [
+    { name: "Plastic", image: "/images/plastic.jpg", description: "Bottles, containers and plastic waste" },
+    { name: "Paper", image: "/images/paper.jpg", description: "Paper, cardboard and newspapers" },
+    { name: "Metal", image: "/images/metal.jpg", description: "Iron, steel and metal scrap" },
+    { name: "Aluminium", image: "/images/aluminium.jpg", description: "Aluminium cans and sheets" },
+    { name: "Copper", image: "/images/copper.jpg", description: "Copper wires and scrap" },
+    { name: "E-Waste", image: "/images/ewaste.jpg", description: "Mobiles, laptops and electronics" },
+    { name: "Glass", image: "/images/glass.jpg", description: "Glass bottles and containers" },
+    { name: "Textile", image: "/images/textile.jpg", description: "Clothes and reusable fabrics" },
+    { name: "Wood", image: "/images/wood.jpg", description: "Wooden materials and furniture" },
+    { name: "Other", image: "/images/other.jpg", description: "Other recyclable materials" },
+  ];
+
+  const products = [
+    { id: 1, name: "PET Plastic Bottles", category: "Plastic", condition: "Recyclable", price: "₹12,000", unit: "Per Ton", rating: "4.8", reviews: "120", image: "/images/plastic-bottles.jpg" },
+    { id: 2, name: "Aluminium Scrap", category: "Metal", condition: "Recyclable", price: "₹45,000", unit: "Per Ton", rating: "4.7", reviews: "85", image: "/images/aluminium-scrap.jpg" },
+    { id: 3, name: "Waste Paper", category: "Paper", condition: "Recyclable", price: "₹8,000", unit: "Per Ton", rating: "4.6", reviews: "64", image: "/images/waste-paper.jpg" },
+    { id: 4, name: "Refurbished Laptop", category: "E-Waste", condition: "Refurbished", price: "₹18,999", unit: "Per Unit", rating: "4.7", reviews: "90", image: "/images/laptop.jpg" },
+    { id: 5, name: "Used Mobile Phone", category: "E-Waste", condition: "Refurbished", price: "₹12,499", unit: "Per Unit", rating: "4.5", reviews: "72", image: "/images/mobile.jpg" },
+    { id: 6, name: "Copper Wire Scrap", category: "Copper", condition: "Recyclable", price: "₹60,000", unit: "Per Ton", rating: "4.9", reviews: "110", image: "/images/copper-wire.jpg" },
+  ];
+
+  const steps = [
+    { number: "01", icon: "⌕", title: "Explore", description: "Browse recyclable materials and refurbished products." },
+    { number: "02", icon: "▣", title: "Choose", description: "Select the product or service that matches your needs." },
+    { number: "03", icon: "♧", title: "Connect", description: "Connect with the available seller or recycling service." },
+    { number: "04", icon: "♻", title: "Reuse / Recycle", description: "Give materials a new life and support a greener future." },
+  ];
+
+  const benefits = [
+    { icon: "◷", title: "Easy Recycling", description: "Explore convenient recycling options and collection services." },
+    { icon: "♧", title: "Convenient Pickup", description: "Find suitable collection and drop-off options." },
+    { icon: "✓", title: "Transparent Listings", description: "View clear product details before making a decision." },
+    { icon: "♻", title: "Sustainable Choices", description: "Help reduce waste by reusing and recycling materials." },
   ];
 
   return (
-    <div className="home">
-      {/* Hero Section */}
+    <main className="home">
       <section className="hero">
         <div className="hero-content">
-          <p className="hero-small">WELCOME TO RECYCONNECT</p>
-
-          <h1>
-            Turn Waste into
-            <br />
-            Opportunity
-          </h1>
-
-          <p>
-            Buy, sell, recycle, donate and exchange materials
-            for a better and sustainable future.
+          <p className="eyebrow">REDUCE · REUSE · RECYCLE</p>
+          <h1>Turn Waste into <span>Opportunity</span></h1>
+          <p className="hero-description">
+            Sell, recycle, or donate your waste and give valuable materials a second life.
+            Support a cleaner planet with RecyConnect.
           </p>
-
-          <div className="hero-buttons">
-            <div className="hero-button-row">
-              <Link to="/products" className="primary-btn">
-                Explore Products
-              </Link>
-
-              <Link to="/products" className="secondary-btn">
-                Sell / Recycle
-              </Link>
-            </div>
-
-            <div className="hero-button-row">
-              <Link to="/products" className="secondary-btn">
-                Donate
-              </Link>
-
-              <Link to="/products" className="secondary-btn">
-                Exchange
-              </Link>
-            </div>
+          <div className="hero-actions">
+            <Link to="/products" className="button button-primary">Explore Products <span>→</span></Link>
+            <Link to="/products" className="button button-outline">Sell / Recycle</Link>
+          </div>
+          <div className="hero-trust">
+            <span>♻ Sustainable choices</span><span>✓ Reuse more</span><span>🌱 Greener future</span>
           </div>
         </div>
-      </section>
-
-      {/* Main Services */}
-      <section className="services">
-        <div className="service-card">
-          <h2>Sell / Recycle</h2>
-          <p>
-            Sell your recyclable waste and give materials
-            a new value.
-          </p>
-          <Link to="/products">Get Started →</Link>
-        </div>
-
-        <div className="service-card">
-          <h2>Buy Recycled Products</h2>
-          <p>
-            Discover useful products made from recycled
-            and refurbished materials.
-          </p>
-          <Link to="/products">Shop Now →</Link>
-        </div>
-
-        <div className="service-card">
-          <h2>Donate</h2>
-          <p>
-            Donate reusable materials and products to
-            people who need them.
-          </p>
-          <Link to="/products">Donate Now →</Link>
-        </div>
-
-        <div className="service-card">
-          <h2>Exchange</h2>
-          <p>
-            Exchange reusable materials and products
-            with other users.
-          </p>
-          <Link to="/products">Exchange →</Link>
+        <div className="hero-visual">
+          <img src="/images/hero-recycling.jpg" alt="Recycling materials and a sustainable environment"
+            onError={(event) => { event.currentTarget.style.display = "none"; }} />
+          <div className="hero-caption"><strong>Less Waste. More Value.</strong><span>Together for a greener future.</span></div>
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="categories">
+      <section className="services section-wrap">
+        {services.map((service) => (
+          <article className="service-card" key={service.title}>
+            <div className="service-icon">{service.icon}</div>
+            <h2>{service.title}</h2><p>{service.description}</p>
+            <Link to="/products">{service.link} →</Link>
+          </article>
+        ))}
+      </section>
+
+      <section className="categories section-wrap">
         <div className="section-heading">
-          <p>EXPLORE</p>
+          <p className="eyebrow">EXPLORE OUR MATERIALS</p>
           <h2>Material Categories</h2>
+          <span>Choose a category to explore recyclable materials and reusable products.</span>
         </div>
-
         <div className="category-grid">
-          <div className="category-card">
-            <div className="category-icon">PL</div>
-            <h3>Plastic</h3>
-            <p>Bottles, containers and plastic waste</p>
-          </div>
-
-          <div className="category-card">
-            <div className="category-icon">MT</div>
-            <h3>Metal</h3>
-            <p>Iron, steel, aluminium and copper</p>
-          </div>
-
-          <div className="category-card">
-            <div className="category-icon">PA</div>
-            <h3>Paper</h3>
-            <p>Paper, cardboard and boxes</p>
-          </div>
-
-          <div className="category-card">
-            <div className="category-icon">EW</div>
-            <h3>E-Waste</h3>
-            <p>Mobiles, laptops and electronics</p>
-          </div>
-
-          <div className="category-card">
-            <div className="category-icon">TX</div>
-            <h3>Textile</h3>
-            <p>Clothes and reusable fabrics</p>
-          </div>
-
-          <div className="category-card">
-            <div className="category-icon">OT</div>
-            <h3>Other</h3>
-            <p>Glass, wood and other materials</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Trending Products */}
-      <section className="trending">
-        <div className="section-heading">
-          <p>DISCOVER</p>
-          <h2>Trending Products</h2>
-        </div>
-
-        <div className="product-preview">
-          <div className="preview-card">
-            <div className="preview-image">Product Image</div>
-            <h3>Recycled Plastic Chair</h3>
-            <p>₹850</p>
-            <Link to="/products/1">View Product →</Link>
-          </div>
-
-          <div className="preview-card">
-            <div className="preview-image">Product Image</div>
-            <h3>Recycled Metal Table</h3>
-            <p>₹1,500</p>
-            <Link to="/products/2">View Product →</Link>
-          </div>
-
-          <div className="preview-card">
-            <div className="preview-image">Product Image</div>
-            <h3>Recycled Paper Notebook</h3>
-            <p>₹120</p>
-            <Link to="/products/3">View Product →</Link>
-          </div>
-        </div>
-      </section>
-      {/* Promotional Campaign */}
-      <section className="promo-section">
-        <div className="promo-banner">
-          <div className="promo-content">
-            <span className="promo-label">
-              LIMITED PROMOTIONAL CAMPAIGN
-            </span>
-
-            <h2>
-              Cash Recycling Sale – 10% Extra Payout
-              on Commercial Scrap
-            </h2>
-
-            <p>
-              Explore recycling options for electronic and metal
-              waste. This sample campaign demonstrates how a
-              promotional offer could appear on RecyConnect.
-            </p>
-
-            <Link to="/products" className="promo-button">
-              Claim Pickup Bonus <span>→</span>
+          {categories.map((category) => (
+            <Link to="/products" className="category-card" key={category.name}>
+              <div className="category-image">
+                <img src={category.image} alt={`${category.name} materials`}
+                  onError={(event) => { event.currentTarget.style.display = "none"; }} />
+              </div>
+              <h3>{category.name}</h3>
+              <p>{category.description}</p>
+              <span className="text-link">Explore →</span>
             </Link>
-          </div>
+          ))}
+        </div>
+        <div className="center-link"><Link to="/products">View All Categories →</Link></div>
+      </section>
 
-          <div className="promo-timer">
-            <p className="timer-heading">DEMO OFFER COUNTDOWN</p>
-
-            <div className="timer-grid">
-              <div className="timer-box">
-                <strong>{String(days).padStart(2, "0")}</strong>
-                <span>Days</span>
+      <section className="trending section-wrap">
+        <div className="section-heading">
+          <p className="eyebrow">DISCOVER OUR COLLECTION</p>
+          <h2>Featured Products / Materials</h2>
+          <span>Explore reusable, recyclable and refurbished products.</span>
+        </div>
+        <div className="product-grid">
+          {products.map((product) => (
+            <article className="product-card" key={product.id}>
+              <div className="product-image">
+                <img src={product.image} alt={product.name}
+                  onError={(event) => { event.currentTarget.style.display = "none"; }} />
+                <span className="product-badge">{product.condition}</span>
               </div>
-
-              <div className="timer-box">
-                <strong>{String(hours).padStart(2, "0")}</strong>
-                <span>Hours</span>
+              <div className="product-info">
+                <span className="product-category">{product.category}</span>
+                <h3>{product.name}</h3>
+                <div className="rating"><span>★</span> {product.rating} <small>({product.reviews} reviews)</small></div>
+                <div className="product-price"><strong>{product.price}</strong><span>{product.unit}</span></div>
+                <Link to={`/products/${product.id}`} className="button button-primary product-button">View Product →</Link>
               </div>
+            </article>
+          ))}
+        </div>
+        <div className="center-link"><Link to="/products">View All Products →</Link></div>
+      </section>
 
-              <div className="timer-box">
-                <strong>{String(minutes).padStart(2, "0")}</strong>
-                <span>Mins</span>
-              </div>
+      <section className="campaign section-wrap">
+        <div>
+          <p className="eyebrow">A BETTER WAY TO RECYCLE</p>
+          <h2>Give Your Recyclables More Value</h2>
+          <p>Explore recycling options for electronic and metal waste. Connect with available listings and discover new ways to reuse valuable materials.</p>
+          <Link to="/products" className="button button-primary">Explore Materials →</Link>
+        </div>
+        <div className="campaign-note"><span>♻</span><strong>Every small step counts.</strong><p>Choose reuse. Choose recycling. Choose a greener tomorrow.</p></div>
+      </section>
 
-              <div className="timer-box">
-                <strong>{String(seconds).padStart(2, "0")}</strong>
-                <span>Secs</span>
-              </div>
-            </div>
-
-            <div className="promo-code">
-              <span>DEMO CODE:</span>
-              <strong>RECYCLEBONUS</strong>
-            </div>
-          </div>
+      <section className="how-it-works section-wrap">
+        <div className="section-heading">
+          <p className="eyebrow">SIMPLE PROCESS</p><h2>How It Works</h2>
+          <span>Four simple steps towards a sustainable lifestyle.</span>
+        </div>
+        <div className="steps-grid">
+          {steps.map((step) => (
+            <article className="step-card" key={step.number}>
+              <div className="step-top"><span>{step.number}</span><strong>{step.icon}</strong></div>
+              <h3>{step.title}</h3><p>{step.description}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* Recycling & Service Benefits */}
-      <section className="benefits-section">
+      <section className="benefits section-wrap">
         <div className="section-heading">
-          <p>SECTION: 06_WORKFLOW</p>
-          <h2>Recycling &amp; Service Benefits</h2>
-          <span>
-            Discover how RecyConnect makes reuse and recycling
-            easier and more accessible.
-          </span>
+          <p className="eyebrow">WHY RECYCLE WITH US?</p><h2>Recycling &amp; Service Benefits</h2>
+          <span>Discover how RecyConnect makes reuse and recycling easier.</span>
         </div>
-
         <div className="benefits-grid">
           {benefits.map((benefit) => (
             <article className="benefit-card" key={benefit.title}>
-              <div className="benefit-icon" aria-hidden="true">
-                {benefit.icon}
-              </div>
-
-              <h3>{benefit.title}</h3>
-              <p>{benefit.description}</p>
-
-              <div className="benefit-detail">
-                {benefit.detail}
-              </div>
+              <div className="benefit-icon">{benefit.icon}</div>
+              <h3>{benefit.title}</h3><p>{benefit.description}</p>
             </article>
           ))}
         </div>
       </section>
 
-      {/* Why Choose RecyConnect */}
-      <section className="advantages-section">
-        <div className="section-heading">
-          <p>SECTION: 07_VALUE_PROPOSITION</p>
-          <h2>Why Choose RecyConnect</h2>
-          <span>
-            A simple way to discover products and explore
-            sustainable choices.
-          </span>
+      <section className="sustainability">
+        <div><p className="eyebrow">OUR SUSTAINABILITY IMPACT</p>
+          <h2>Small Actions. Big Impact.</h2>
+          <p>Reuse more, waste less and help create a cleaner future for the next generation.</p>
+          <Link to="/products" className="button button-primary">Be Part of the Change →</Link>
         </div>
-
-        <div className="advantages-grid">
-          {advantages.map((item) => (
-            <article className="advantage-card" key={item.label}>
-              <div className="advantage-top">
-                <span>{item.label}</span>
-                <span className="advantage-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-              </div>
-
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
+        <div className="sustainability-icon" aria-hidden="true">🌱</div>
       </section>
-    </div>
+    </main>
   );
 }
 

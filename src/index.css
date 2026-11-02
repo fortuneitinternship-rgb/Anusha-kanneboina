@@ -1,25 +1,42 @@
 
-/* RecyConnect - Global Theme */
+/* =====================================
+   RECYCONNECT - GLOBAL THEME
+===================================== */
 
 :root {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #171717;
-  background: #ffffff;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #263B35;
+  background: #FFFFFF;
 
-  --color-black: #111111;
-  --color-white: #ffffff;
-  --color-gray-100: #f7f7f7;
-  --color-gray-200: #eeeeee;
-  --color-gray-400: #aaaaaa;
-  --color-gray-600: #666666;
-  --color-border: #dddddd;
+  /* Brand Colors */
+  --forest: #075B43;
+  --leaf: #269B59;
+  --mint: #DDF2E3;
+  --soft-green: #F3F8F3;
+  --white: #FFFFFF;
+  --text: #263B35;
 
+  /* Supporting Colors */
+  --text-muted: #687A72;
+  --border: #DCE8DF;
+  --border-dark: #B8D1C0;
+  --surface: #FFFFFF;
+  --success: #16834B;
+
+  /* Layout */
   --container-width: 1400px;
-  --page-padding: clamp(20px, 5vw, 80px);
-  --radius-small: 6px;
-  --radius-medium: 12px;
+  --page-padding: clamp(18px, 5vw, 76px);
 
-  --transition: 0.2s ease;
+  /* Radius */
+  --radius-small: 8px;
+  --radius-medium: 14px;
+  --radius-large: 22px;
+
+  /* Shadows */
+  --shadow-soft: 0 5px 20px rgba(7, 91, 67, 0.07);
+  --shadow-hover: 0 10px 28px rgba(7, 91, 67, 0.12);
+
+  --transition: 0.25s ease;
 }
 
 *,
@@ -37,9 +54,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
-  color: var(--color-black);
-  background: var(--color-white);
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background: var(--white);
   line-height: 1.6;
 }
 
@@ -63,6 +80,7 @@ video {
 
 a {
   color: inherit;
+  text-decoration: none;
   transition: color var(--transition);
 }
 
@@ -83,6 +101,7 @@ h4,
 h5,
 h6 {
   line-height: 1.2;
+  color: var(--text);
 }
 
 #root {
@@ -90,8 +109,13 @@ h6 {
 }
 
 ::selection {
-  color: var(--color-white);
-  background: var(--color-black);
+  color: var(--white);
+  background: var(--forest);
+}
+
+:focus-visible {
+  outline: 2px solid var(--leaf);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
