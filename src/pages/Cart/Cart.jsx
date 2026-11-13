@@ -1,10 +1,44 @@
+
 import { Link } from "react-router-dom";
+import { useShop } from "../../context/ShopContext";
 import "./Cart.css";
 
 function Cart() {
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+  } = useShop();
+
+  // Calculate subtotal
+  const subtotal = cartItems.reduce(
+    (total, item) =>
+      total +
+      Number(item.price || 0) * Number(item.quantity || 0),
+    0
+  );
+
+  // Delivery charges
+  const delivery = cartItems.length > 0 ? 50 : 0;
+
+  // Final total
+  const total = subtotal + delivery;
+
+  // Decrease quantity
+  const decreaseQuantity = (item) => {
+    updateQuantity(item.id, item.quantity - 1);
+  };
+
+  // Increase quantity
+  const increaseQuantity = (item) => {
+    updateQuantity(item.id, item.quantity + 1);
+  };
+
   return (
     <div className="cart-page">
 
+      {/* Page Title */}
       <div className="page-title">
         <p>RECYCONNECT</p>
         <h1>Shopping Cart</h1>
@@ -12,71 +46,161 @@ function Cart() {
 
       <div className="cart-container">
 
+        {/* Cart Items */}
         <div className="cart-items">
 
-          <div className="cart-item">
-            <div className="cart-image">Product</div>
+          <div className="cart-header">
+            <h2>Your Items ({cartItems.length})</h2>
 
-            <div className="cart-info">
-              <h3>Recycled Plastic Chair</h3>
-              <p>Recycled Plastic</p>
-
-              <div className="cart-quantity">
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
-              </div>
-            </div>
-
-            <strong>₹850</strong>
+            {cartItems.length > 0 && (
+              <button type="button" onClick={clearCart}>
+                Clear Cart
+              </button>
+            )}
           </div>
 
-          <div className="cart-item">
-            <div className="cart-image">Product</div>
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div className="cart-item" key={item.id}>
 
-            <div className="cart-info">
-              <h3>Recycled Paper Notebook</h3>
-              <p>Recycled Paper</p>
+                {/* Product Image */}
+                <div className="cart-image">
+                  <img
+                    src={item.image}
+                    alt={item.name || "Product"}
+                  />
+                </div>
 
-              <div className="cart-quantity">
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
+                {/* Product Details */}
+                <div className="cart-info">
+
+                  <h3>{item.name}</h3>
+
+                  <p>{item.category}</p>
+
+                  <strong className="cart-item-price">
+                    ₹{Number(item.price || 0).toLocaleString("en-IN")}
+                  </strong>
+
+                  {/* Quantity Controls */}
+                  <div className="cart-quantity">
+
+                    <button
+                      type="button"
+                      onClick={() => decreaseQuantity(item)}
+                      aria-label={`Decrease ${item.name} quantity`}
+                    >
+                      −
+                    </button>
+
+                    <span>{item.quantity}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => increaseQuantity(item)}
+                      disabled={
+                        Number.isFinite(Number(item.stock)) &&
+                        Number(item.stock) > 0 &&
+                        item.quantity >= Number(item.stock)
+                      }
+                      aria-label={`Increase ${item.name} quantity`}
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+                  {/* Remove Product */}
+                  <button
+                    type="button"
+                    className="remove-item"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    Remove
+                  </button>
+
+                </div>
+
+                {/* Individual Product Total */}
+                <strong className="cart-line-total">
+                  ₹
+                  {(
+                    Number(item.price || 0) *
+                    Number(item.quantity || 0)
+                  ).toLocaleString("en-IN")}
+                </strong>
+
               </div>
+            ))
+          ) : (
+
+            /* Empty Cart */
+            <div className="empty-cart">
+              <div>🛒</div>
+
+              <h2>Your Cart is Empty</h2>
+
+              <p>
+                Discover sustainable products and add them
+                to your cart.
+              </p>
+
+              <Link to="/products">
+                Continue Shopping
+              </Link>
             </div>
 
-            <strong>₹120</strong>
-          </div>
+          )}
 
         </div>
 
+        {/* Order Summary */}
         <div className="cart-summary">
+
           <h2>Order Summary</h2>
 
           <div>
             <span>Subtotal</span>
-            <span>₹970</span>
+
+            <span>
+              ₹{subtotal.toLocaleString("en-IN")}
+            </span>
           </div>
 
           <div>
             <span>Delivery</span>
-            <span>₹50</span>
+
+            <span>
+              ₹{delivery.toLocaleString("en-IN")}
+            </span>
           </div>
 
           <hr />
 
           <div className="total">
             <span>Total</span>
-            <strong>₹1020</strong>
+
+            <strong>
+              ₹{total.toLocaleString("en-IN")}
+            </strong>
           </div>
 
-          <Link to="/checkout">
-            Proceed to Checkout
+          {cartItems.length > 0 && (
+            <Link to="/checkout">
+              Proceed to Checkout
+            </Link>
+          )}
+
+          <Link
+            to="/products"
+            className="continue-shopping"
+          >
+            Continue Shopping
           </Link>
+
         </div>
 
       </div>
-
     </div>
   );
 }

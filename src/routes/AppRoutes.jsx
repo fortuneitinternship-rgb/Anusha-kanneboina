@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "../Layouts/MainLayout";
 
@@ -14,13 +15,13 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import VerifyOTP from "../pages/VerifyOTP/VerifyOTP";
 import NewPassword from "../pages/NewPassword/NewPassword";
 import SearchResults from "../pages/SearchResults/SearchResults";
+import InfoPages from "../pages/InfoPages/InfoPages";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetails />} />
@@ -30,11 +31,25 @@ function AppRoutes() {
           <Route path="/register" element={<Register />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-otp" element={<VerifyOTP />} /> 
+          <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/new-password" element={<NewPassword />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/search" element={<SearchResults />} />
 
+          <Route
+            path="/how-it-works"
+            element={<InfoPages type="how-it-works" />}
+          />
+
+          <Route
+            path="/benefits"
+            element={<InfoPages type="benefits" />}
+          />
+
+          <Route
+            path="/sustainability"
+            element={<InfoPages type="sustainability" />}
+          />
 
         </Route>
       </Routes>

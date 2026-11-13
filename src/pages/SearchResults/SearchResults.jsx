@@ -1,123 +1,223 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { products } from "../../data/products";
+import { useShop } from "../../context/ShopContext";
 import "./SearchResults.css";
 
-const products = [
-  {
-    id: 1,
-    name: "Refurbished Laptop - ThinkTech 1480",
-    category: "E-Waste",
-    condition: "Refurbished",
-    description: "Tested refurbished laptop with SSD and RAM upgrade.",
-    price: 28500,
-    location: "Hyderabad",
-    availability: "Available",
-    image: "💻",
-  },
-  {
-    id: 2,
-    name: "Recycled Aluminum Scrap",
-    category: "Metal",
-    condition: "Recycled",
-    description: "Premium recycled aluminium ingots for industrial use.",
-    price: 2499,
-    location: "Mumbai",
-    availability: "Available",
-    image: "⚙️",
-  },
-  {
-    id: 3,
-    name: "Refurbished Precision Ultrabook",
-    category: "E-Waste",
-    condition: "Refurbished",
-    description: "Lightweight laptop with upgraded memory and SSD.",
-    price: 21999,
-    location: "Bangalore",
-    availability: "Available",
-    image: "💻",
-  },
-  {
-    id: 4,
-    name: "Recycled Plastic Laptop Protective Sleeve",
-    category: "Plastic",
-    condition: "Recycled",
-    description: "Protective sleeve made from recycled plastic materials.",
-    price: 899,
-    location: "Hyderabad",
-    availability: "Available",
-    image: "♻️",
-  },
-  {
-    id: 5,
-    name: "Refurbished Business Laptop Display Panel",
-    category: "E-Waste",
-    condition: "Refurbished",
-    description: "Tested display screen suitable for laptop replacement.",
-    price: 4750,
-    location: "Pune",
-    availability: "Available",
-    image: "🖥️",
-  },
-  {
-    id: 6,
-    name: "Recycled Kraft Packaging Sheets",
-    category: "Paper",
-    condition: "Recycled",
-    description: "Eco-friendly packaging sheets made from recycled paper.",
-    price: 450,
-    location: "Hyderabad",
-    availability: "Available",
-    image: "📦",
-  },
-  {
-    id: 7,
-    name: "Cotton Textile Waste Bundle",
-    category: "Textile",
-    condition: "Recycled",
-    description: "Sorted cotton textile waste for recycling and reuse.",
-    price: 650,
-    location: "Chennai",
-    availability: "Available",
-    image: "🧵",
-  },
-  {
-    id: 8,
-    name: "Copper Wire Scrap",
-    category: "Metal",
-    condition: "Recycled",
-    description: "Sorted copper wire scrap for industrial recycling.",
-    price: 1800,
-    location: "Hyderabad",
-    availability: "Available",
-    image: "🔩",
-  },
-  {
-    id: 9,
-    name: "Recycled Glass Bottles",
-    category: "Other",
-    condition: "Recycled",
-    description: "Clean glass bottles suitable for reuse and recycling.",
-    price: 300,
-    location: "Delhi",
-    availability: "Out of Stock",
-    image: "🍾",
-  },
-];
-
 const categoryOptions = [
-  "E-Waste",
   "Plastic",
   "Metal",
   "Paper",
+  "E-Waste",
   "Textile",
   "Other",
 ];
 
+// Keep these as category names only.
+// Product names such as laptop, glass and cotton are searched separately.
+const categoryAliases = {
+  Plastic: ["plastic", "plastics"],
+  Metal: ["metal", "metals"],
+  Paper: ["paper", "papers", "cardboard"],
+  "E-Waste": ["e-waste", "ewaste", "electronic", "electronics"],
+  Textile: ["textile", "textiles"],
+  Other: ["other"],
+};
+
+const normalize = (value = "") =>
+  String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9₹.\s-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+function getCategory(product) {
+  const value = normalize(product.category);
+
+  if (value === "ewaste" || value === "e waste") {
+    return "E-Waste";
+  }
+
+  return (
+    categoryOptions.find(
+      (category) => normalize(category) === value
+    ) || "Other"
+  );
+}
+
+function getNumericPrice(value) {
+  const cleaned = String(value ?? "").replace(/,/g, "");
+  const number = Number(cleaned.replace(/[^\d.]/g, ""));
+
+  return Number.isFinite(number) ? number : 0;
+}
+
+function parsePrice(value) {
+  if (!value) return null;
+
+  const cleaned = String(value).toLowerCase().replace(/,/g, "");
+  const number = Number(cleaned.replace(/[^\d.]/g, ""));
+
+  if (!Number.isFinite(number)) return null;
+
+  if (/\bk\b/.test(cleaned)) return number * 1000;
+
+  if (cleaned.includes("lakh") || cleaned.includes("lac")) {
+    return number * 100000;
+  }
+
+  return number;
+}
+
+function getSearchRules(query) {
+  let remainingText = normalize(query);
+  let detectedCategory = null;
+  let minPrice = null;
+  let maxPrice = null;
+  let minInclusive = true;
+  let maxInclusive = true;
+
+  // Detect complete category names and useful starting letters.
+  const words = remainingText.split(" ");
+
+  for (const [category, aliases] of Object.entries(categoryAliases)) {
+    const matchedAlias = aliases.find((alias) =>
+      words.some((word) => word === alias)
+    );
+
+    if (matchedAlias) {
+      detectedCategory = category;
+
+      const aliasPattern = matchedAlias.replace("-", "[-\\s]?");
+
+      remainingText = remainingText.replace(
+        new RegExp(`\\b${aliasPattern}\\b`, "i"),
+        " "
+      );
+
+      break;
+    }
+  }
+
+  // Detect partial category words such as "met", "plas", "pap".
+  if (!detectedCategory) {
+    const firstWord = normalize(query).split(" ")[0] || "";
+
+    if (firstWord.length >= 3) {
+      const partialMatches = Object.entries(categoryAliases)
+        .filter(([, aliases]) =>
+          aliases.some((alias) => alias.startsWith(firstWord))
+        )
+        .map(([category]) => category);
+
+      if (partialMatches.length === 1) {
+        detectedCategory = partialMatches[0];
+
+        remainingText = remainingText.replace(
+          new RegExp(`^${firstWord}`, "i"),
+          " "
+        );
+      }
+    }
+  }
+
+  // Detect price formats:
+  // below 1000, under 1k, above 500, between 100 and 500.
+  const pricePattern =
+    /\b(below|under|less than|upto|up to|above|over|greater than|more than|between)\s*(?:₹|rs\.?\s*)?(\d+(?:\.\d+)?\s*(?:k|lakh|lac)?)\s*(?:(?:and|to|-)\s*(?:₹|rs\.?\s*)?(\d+(?:\.\d+)?\s*(?:k|lakh|lac)?))?/i;
+
+  const priceMatch = normalize(query).match(pricePattern);
+
+  if (priceMatch) {
+    const operator = priceMatch[1].toLowerCase();
+    const firstValue = parsePrice(priceMatch[2]);
+    const secondValue = parsePrice(priceMatch[3]);
+
+    if (operator === "between" && secondValue !== null) {
+      minPrice = Math.min(firstValue, secondValue);
+      maxPrice = Math.max(firstValue, secondValue);
+    } else if (
+      ["below", "under", "less than"].includes(operator)
+    ) {
+      maxPrice = firstValue;
+      maxInclusive = false;
+    } else if (
+      ["above", "over", "greater than", "more than"].includes(operator)
+    ) {
+      minPrice = firstValue;
+      minInclusive = false;
+    } else if (["upto", "up to"].includes(operator)) {
+      maxPrice = firstValue;
+    }
+
+    remainingText = remainingText.replace(priceMatch[0], " ");
+  }
+
+  // Support shorthand: "plastic 1000" means Plastic up to ₹1,000.
+  const shorthandPrice = remainingText.match(
+    /(?:₹|rs\.?\s*)?(\d+(?:\.\d+)?\s*(?:k|lakh|lac)?)\b/i
+  );
+
+  if (shorthandPrice && minPrice === null && maxPrice === null) {
+    maxPrice = parsePrice(shorthandPrice[1]);
+
+    remainingText = remainingText.replace(
+      shorthandPrice[0],
+      " "
+    );
+  }
+
+  const ignoredWords = [
+    "products",
+    "product",
+    "items",
+    "item",
+    "show",
+    "find",
+    "search",
+    "all",
+    "available",
+    "in",
+    "the",
+    "for",
+    "with",
+    "price",
+    "rs",
+    "rupees",
+    "below",
+    "under",
+    "above",
+    "over",
+    "less",
+    "than",
+    "more",
+    "upto",
+    "up",
+    "to",
+    "between",
+    "and",
+  ];
+
+  const remainingWords = normalize(remainingText)
+    .split(" ")
+    .filter((word) => word && !ignoredWords.includes(word));
+
+  return {
+    detectedCategory,
+    minPrice,
+    maxPrice,
+    minInclusive,
+    maxInclusive,
+    remainingWords,
+  };
+}
+
 function SearchResults() {
   const [searchParams] = useSearchParams();
-
   const query = searchParams.get("query") || "";
+
+  const { cartItems, addToCart, updateQuantity } = useShop();
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedConditions, setSelectedConditions] = useState([]);
@@ -129,9 +229,17 @@ function SearchResults() {
 
   const productsPerPage = 6;
 
+  const searchRules = useMemo(
+    () => getSearchRules(query),
+    [query]
+  );
+
   useEffect(() => {
     setPage(1);
   }, [query]);
+
+  const getCartItem = (productId) =>
+    cartItems.find((item) => item.id === productId);
 
   const toggleCategory = (category) => {
     setSelectedCategories((previous) =>
@@ -139,6 +247,7 @@ function SearchResults() {
         ? previous.filter((item) => item !== category)
         : [...previous, category]
     );
+
     setPage(1);
   };
 
@@ -148,47 +257,76 @@ function SearchResults() {
         ? previous.filter((item) => item !== condition)
         : [...previous, condition]
     );
+
     setPage(1);
   };
 
   const filteredProducts = useMemo(() => {
     let result = products.filter((product) => {
-      const searchTerm = query.trim().toLowerCase();
+      const productCategory = getCategory(product);
+      const price = getNumericPrice(product.price);
+      const stock = Number(product.stock) || 0;
 
-      const searchableText = [
-        product.name,
-        product.category,
-        product.condition,
-        product.description,
-        product.location,
-      ].join(" ").toLowerCase();
+      const searchableWords = normalize(
+        [
+          product.name,
+          product.category,
+          product.condition,
+          product.description,
+        ].join(" ")
+      ).split(" ");
 
-      const matchesSearch =
-        !searchTerm || searchableText.includes(searchTerm);
+      const matchesSearchCategory =
+        !searchRules.detectedCategory ||
+        productCategory === searchRules.detectedCategory;
 
-      const matchesCategory =
+      const matchesSearchWords =
+        searchRules.remainingWords.length === 0 ||
+        searchRules.remainingWords.every((word) =>
+          searchableWords.some((productWord) =>
+            productWord.startsWith(word)
+          )
+        );
+
+      const matchesSearchMinPrice =
+        searchRules.minPrice === null ||
+        (searchRules.minInclusive
+          ? price >= searchRules.minPrice
+          : price > searchRules.minPrice);
+
+      const matchesSearchMaxPrice =
+        searchRules.maxPrice === null ||
+        (searchRules.maxInclusive
+          ? price <= searchRules.maxPrice
+          : price < searchRules.maxPrice);
+
+      const matchesSelectedCategory =
         selectedCategories.length === 0 ||
-        selectedCategories.includes(product.category);
+        selectedCategories.includes(productCategory);
 
       const matchesCondition =
         selectedConditions.length === 0 ||
-        selectedConditions.includes(product.condition);
+        selectedConditions.some(
+          (condition) =>
+            normalize(condition) === normalize(product.condition)
+        );
 
       const matchesMinPrice =
-        minPrice === "" || product.price >= Number(minPrice);
+        minPrice === "" || price >= Number(minPrice);
 
       const matchesMaxPrice =
-        maxPrice === "" || product.price <= Number(maxPrice);
+        maxPrice === "" || price <= Number(maxPrice);
 
       const matchesAvailability =
         availability === "All" ||
-        (availability === "Available"
-          ? product.availability === "Available"
-          : product.availability === "Out of Stock");
+        (availability === "Available" ? stock > 0 : stock <= 0);
 
       return (
-        matchesSearch &&
-        matchesCategory &&
+        matchesSearchCategory &&
+        matchesSearchWords &&
+        matchesSearchMinPrice &&
+        matchesSearchMaxPrice &&
+        matchesSelectedCategory &&
         matchesCondition &&
         matchesMinPrice &&
         matchesMaxPrice &&
@@ -197,16 +335,26 @@ function SearchResults() {
     });
 
     if (sort === "low") {
-      result.sort((a, b) => a.price - b.price);
+      result.sort(
+        (a, b) =>
+          getNumericPrice(a.price) - getNumericPrice(b.price)
+      );
     } else if (sort === "high") {
-      result.sort((a, b) => b.price - a.price);
+      result.sort(
+        (a, b) =>
+          getNumericPrice(b.price) - getNumericPrice(a.price)
+      );
     } else if (sort === "name") {
       result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === "rating") {
+      result.sort(
+        (a, b) => Number(b.rating || 0) - Number(a.rating || 0)
+      );
     }
 
     return result;
   }, [
-    query,
+    searchRules,
     selectedCategories,
     selectedConditions,
     minPrice,
@@ -231,8 +379,29 @@ function SearchResults() {
     setMinPrice("");
     setMaxPrice("");
     setAvailability("Available");
+    setSort("relevance");
     setPage(1);
   };
+
+  const handleAddToCart = (product) => {
+    const existing = getCartItem(product.id);
+    const stock = Number(product.stock) || 0;
+
+    if (stock <= 0) return;
+
+    if (existing) {
+      if (existing.quantity >= stock) {
+        alert("Maximum available stock has been added.");
+        return;
+      }
+
+      updateQuantity(product.id, existing.quantity + 1);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const activeSearchCategory = searchRules.detectedCategory;
 
   return (
     <main className="search-results-page">
@@ -240,7 +409,6 @@ function SearchResults() {
         <Link to="/">Home</Link> / Search Results
       </div>
 
-      {/* Search Results Heading - No Inner Search Bar */}
       <section className="search-header-box">
         <span className="search-eyebrow">
           ♻ RECYCONNECT PRODUCT DISCOVERY
@@ -255,17 +423,22 @@ function SearchResults() {
         </p>
 
         <div className="search-header-bottom">
-          <span>Find materials and products that match your needs.</span>
+          <span>
+            Find materials and products that match your needs.
+          </span>
+
           <strong>{filteredProducts.length} results found</strong>
         </div>
       </section>
 
       <section className="results-layout">
-        {/* Filters Sidebar */}
         <aside className="filter-sidebar">
           <div className="filter-title">
             <h2>FILTER RESULTS</h2>
-            <button onClick={clearFilters}>Clear All</button>
+
+            <button type="button" onClick={clearFilters}>
+              Clear All
+            </button>
           </div>
 
           <div className="filter-group">
@@ -284,18 +457,20 @@ function SearchResults() {
           </div>
 
           <div className="filter-group">
-            <h3>MATERIAL CONDITION</h3>
+            <h3>PRODUCT CONDITION</h3>
 
-            {["Recycled", "Refurbished", "Reusable"].map((condition) => (
-              <label key={condition} className="filter-option">
-                <input
-                  type="checkbox"
-                  checked={selectedConditions.includes(condition)}
-                  onChange={() => toggleCondition(condition)}
-                />
-                {condition}
-              </label>
-            ))}
+            {["New", "Used", "Recycled", "Refurbished", "Reusable"].map(
+              (condition) => (
+                <label key={condition} className="filter-option">
+                  <input
+                    type="checkbox"
+                    checked={selectedConditions.includes(condition)}
+                    onChange={() => toggleCondition(condition)}
+                  />
+                  {condition}
+                </label>
+              )
+            )}
           </div>
 
           <div className="filter-group">
@@ -307,8 +482,8 @@ function SearchResults() {
                 min="0"
                 placeholder="Min"
                 value={minPrice}
-                onChange={(e) => {
-                  setMinPrice(e.target.value);
+                onChange={(event) => {
+                  setMinPrice(event.target.value);
                   setPage(1);
                 }}
               />
@@ -318,8 +493,8 @@ function SearchResults() {
                 min="0"
                 placeholder="Max"
                 value={maxPrice}
-                onChange={(e) => {
-                  setMaxPrice(e.target.value);
+                onChange={(event) => {
+                  setMaxPrice(event.target.value);
                   setPage(1);
                 }}
               />
@@ -351,17 +526,21 @@ function SearchResults() {
 
           <button
             className="apply-filter-btn"
+            type="button"
             onClick={() => setPage(1)}
           >
             APPLY FILTERS
           </button>
 
-          <button className="clear-filter-btn" onClick={clearFilters}>
+          <button
+            className="clear-filter-btn"
+            type="button"
+            onClick={clearFilters}
+          >
             CLEAR ALL
           </button>
         </aside>
 
-        {/* Products Section */}
         <div className="results-content">
           <div className="results-toolbar">
             <p>
@@ -370,10 +549,18 @@ function SearchResults() {
                 ? 0
                 : (page - 1) * productsPerPage + 1}
               {" - "}
-              {Math.min(page * productsPerPage, filteredProducts.length)}
+              {Math.min(
+                page * productsPerPage,
+                filteredProducts.length
+              )}
               {" of "}
               {filteredProducts.length} results
-              {query && <> for "<strong>{query}</strong>"</>}
+
+              {query && (
+                <>
+                  {" "}for "<strong>{query}</strong>"
+                </>
+              )}
             </p>
 
             <div className="sort-control">
@@ -382,97 +569,151 @@ function SearchResults() {
               <select
                 id="sort-products"
                 value={sort}
-                onChange={(e) => {
-                  setSort(e.target.value);
+                onChange={(event) => {
+                  setSort(event.target.value);
                   setPage(1);
                 }}
               >
                 <option value="relevance">Relevance</option>
                 <option value="low">Price: Low to High</option>
                 <option value="high">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
                 <option value="name">Name: A to Z</option>
               </select>
             </div>
           </div>
 
           <div className="active-filters">
-            <span>FILTERS:</span>
+            <span>SEARCH:</span>
 
-            {[...selectedCategories, ...selectedConditions].length === 0 ? (
-              <small>No category or condition selected</small>
+            {query ? (
+              <span className="filter-chip">{query}</span>
             ) : (
-              [...selectedCategories, ...selectedConditions].map((item) => (
-                <span className="filter-chip" key={item}>
-                  {item}
-                </span>
-              ))
+              <small>All products</small>
+            )}
+
+            {activeSearchCategory && (
+              <span className="filter-chip">
+                Category: {activeSearchCategory}
+              </span>
+            )}
+
+            {searchRules.minPrice !== null && (
+              <span className="filter-chip">
+                Above ₹
+                {searchRules.minPrice.toLocaleString("en-IN")}
+              </span>
+            )}
+
+            {searchRules.maxPrice !== null && (
+              <span className="filter-chip">
+                Up to ₹
+                {searchRules.maxPrice.toLocaleString("en-IN")}
+              </span>
             )}
           </div>
 
           {currentProducts.length > 0 ? (
             <div className="search-product-grid">
-              {currentProducts.map((product) => (
-                <article className="search-product-card" key={product.id}>
-                  <div className="search-product-image">
-                    <span>{product.image}</span>
-                    <small>PRODUCT IMAGE</small>
-                    <span className="product-condition">
-                      {product.condition}
-                    </span>
-                  </div>
+              {currentProducts.map((product) => {
+                const cartItem = getCartItem(product.id);
+                const outOfStock = Number(product.stock) <= 0;
 
-                  <div className="search-product-info">
-                    <span className="product-category">
-                      {product.category} / {product.condition}
-                    </span>
-
-                    <h3>{product.name}</h3>
-
-                    <p>{product.description}</p>
-
-                    <span className="product-location">
-                      Location: {product.location}
-                    </span>
-
-                    <div className="search-product-price">
-                      ₹ {product.price.toLocaleString("en-IN")}
-                    </div>
-
-                    <span
-                      className={
-                        product.availability === "Available"
-                          ? "stock-status in-stock"
-                          : "stock-status out-stock"
-                      }
+                return (
+                  <article
+                    className="search-product-card"
+                    key={product.id}
+                  >
+                    <Link
+                      to={`/products/${product.id}`}
+                      className="search-product-image"
                     >
-                      {product.availability}
-                    </span>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        loading="lazy"
+                      />
 
-                    <div className="product-card-actions">
-                      <Link to={`/products/${product.id}`}>
-                        VIEW DETAILS
+                      <span className="product-condition">
+                        {product.condition || "Recycled"}
+                      </span>
+                    </Link>
+
+                    <div className="search-product-info">
+                      <span className="product-category">
+                        {getCategory(product)}
+                      </span>
+
+                      <Link
+                        to={`/products/${product.id}`}
+                        className="search-product-title"
+                      >
+                        <h3>{product.name}</h3>
                       </Link>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          alert("Connect this button to your cart feature.")
-                        }
+                      <p>
+                        {product.description ||
+                          `Explore this ${getCategory(
+                            product
+                          )} product and give it a useful second life.`}
+                      </p>
+
+                      <div className="search-product-rating">
+                        <span>★</span>
+                        {Number(product.rating || 0).toFixed(1)}
+                      </div>
+
+                      <div className="search-product-price">
+                        ₹
+                        {getNumericPrice(product.price).toLocaleString(
+                          "en-IN"
+                        )}
+                      </div>
+
+                      <span
+                        className={`stock-status ${
+                          outOfStock ? "out-stock" : "in-stock"
+                        }`}
                       >
-                        ADD TO CART
-                      </button>
+                        {outOfStock
+                          ? "Out of Stock"
+                          : `${product.stock} available`}
+                      </span>
+
+                      <div className="product-card-actions">
+                        <Link to={`/products/${product.id}`}>
+                          VIEW DETAILS
+                        </Link>
+
+                        <button
+                          type="button"
+                          disabled={outOfStock}
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          {cartItem
+                            ? `ADD MORE (${cartItem.quantity})`
+                            : "ADD TO CART"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           ) : (
             <div className="empty-search-results">
+              <div className="empty-search-icon">⌕</div>
+
               <h2>No Products Found</h2>
+
               <p>
-                No products matched "{query}". Try another product name.
+                We couldn't find products matching "{query}" and your
+                selected filters.
               </p>
-              <button onClick={clearFilters}>CLEAR FILTERS</button>
+
+              <button type="button" onClick={clearFilters}>
+                CLEAR FILTERS
+              </button>
             </div>
           )}
 
@@ -484,16 +725,22 @@ function SearchResults() {
 
               <div>
                 <button
+                  type="button"
                   disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
+                  onClick={() =>
+                    setPage((previous) => previous - 1)
+                  }
                 >
                   Previous
                 </button>
 
                 {Array.from({ length: totalPages }, (_, index) => (
                   <button
+                    type="button"
                     key={index + 1}
-                    className={page === index + 1 ? "active-page" : ""}
+                    className={
+                      page === index + 1 ? "active-page" : ""
+                    }
                     onClick={() => setPage(index + 1)}
                   >
                     {index + 1}
@@ -501,8 +748,11 @@ function SearchResults() {
                 ))}
 
                 <button
+                  type="button"
                   disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
+                  onClick={() =>
+                    setPage((previous) => previous + 1)
+                  }
                 >
                   Next
                 </button>

@@ -5,6 +5,7 @@ import "../Login/Login.css";
 
 function NewPassword() {
   const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,6 +23,7 @@ function NewPassword() {
       return;
     }
 
+    setError("");
     alert("Password updated successfully! (Demo only)");
     navigate("/login");
   };
@@ -42,7 +44,10 @@ function NewPassword() {
             type="password"
             placeholder="Enter new password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError("");
+            }}
             required
             minLength={6}
           />
@@ -52,7 +57,10 @@ function NewPassword() {
             type="password"
             placeholder="Confirm new password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setError("");
+            }}
             required
           />
 

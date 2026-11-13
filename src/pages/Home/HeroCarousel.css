@@ -1,0 +1,259 @@
+
+/* FULL WIDTH RECYCONNECT HERO */
+
+.full-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #075B43;
+}
+
+.full-hero-carousel,
+.full-hero .carousel-inner,
+.full-hero .carousel-item {
+  width: 100%;
+  height: 520px;
+}
+
+.full-hero .carousel-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.full-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.full-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(7, 91, 67, 0.96) 0%,
+    rgba(7, 91, 67, 0.86) 42%,
+    rgba(7, 91, 67, 0.35) 100%
+  );
+}
+
+.full-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 1400px;
+  height: 100%;
+  margin: auto;
+  padding: 65px 6% 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.full-hero-content .eyebrow {
+  margin-bottom: 16px;
+  color: #DDF2E3;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.full-hero-content h1 {
+  max-width: 700px;
+  margin: 0 0 19px;
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -1px;
+}
+
+.full-hero-content h1 span {
+  color: #DDF2E3;
+}
+
+.full-hero-description {
+  max-width: 610px;
+  margin: 0;
+  color: #FFFFFF;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.full-hero-content .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.full-hero-content .button {
+  min-height: 46px;
+  padding: 12px 21px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.full-hero-content .button-primary {
+  color: #FFFFFF;
+  background: #269B59;
+  border: 1px solid #269B59;
+}
+
+.full-hero-content .button-primary:hover {
+  color: #075B43;
+  background: #DDF2E3;
+  border-color: #DDF2E3;
+}
+
+.full-hero-content .button-outline {
+  color: #FFFFFF;
+  background: transparent;
+  border: 1px solid #FFFFFF;
+}
+
+.full-hero-content .button-outline:hover {
+  color: #075B43;
+  background: #FFFFFF;
+}
+
+.full-hero-content .hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 28px;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Carousel controls */
+
+.full-hero .carousel-control-prev,
+.full-hero .carousel-control-next {
+  z-index: 5;
+  width: 48px;
+  height: 48px;
+  top: 50%;
+  bottom: auto;
+  margin: 0 18px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.full-hero .carousel-control-prev:hover,
+.full-hero .carousel-control-next:hover {
+  background: #269B59;
+}
+
+.full-hero .carousel-indicators {
+  z-index: 6;
+  margin-bottom: 17px;
+}
+
+.full-hero .carousel-indicators button {
+  width: 27px;
+  height: 5px;
+  margin: 0 5px;
+  border: 0;
+  border-radius: 5px;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .full-hero-carousel,
+  .full-hero .carousel-inner,
+  .full-hero .carousel-item {
+    height: 480px;
+  }
+
+  .full-hero-content {
+    width: 100%;
+    padding: 55px 9% 65px;
+  }
+
+  .full-hero-content h1 {
+    font-size: clamp(36px, 7vw, 48px);
+  }
+
+  .full-hero-description {
+    font-size: 15px;
+  }
+
+  .full-hero .carousel-control-prev,
+  .full-hero .carousel-control-next {
+    width: 37px;
+    height: 37px;
+    margin: 0 7px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .full-hero-carousel,
+  .full-hero .carousel-inner,
+  .full-hero .carousel-item {
+    height: 490px;
+  }
+
+  .full-hero-content {
+    padding: 45px 8% 65px;
+  }
+
+  .full-hero-content .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.3px;
+  }
+
+  .full-hero-content h1 {
+    font-size: 37px;
+  }
+
+  .full-hero-description {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .full-hero-content .hero-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .full-hero-content .button {
+    width: 100%;
+  }
+
+  .full-hero-content .hero-trust {
+    gap: 9px 13px;
+    font-size: 11px;
+  }
+
+  .full-hero .carousel-control-prev,
+  .full-hero .carousel-control-next {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .full-hero *,
+  .full-hero *::before,
+  .full-hero *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

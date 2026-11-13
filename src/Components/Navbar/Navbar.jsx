@@ -1,6 +1,7 @@
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useShop } from "../../context/ShopContext";
 import "./Navbar.css";
 
 function Navbar() {
@@ -8,20 +9,49 @@ function Navbar() {
   const [searchText, setSearchText] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
-  const closeMenu = () => {
-    setMenuOpen(false);
+  const { cartItems, wishlistItems } = useShop();
+
+  const cartCount = cartItems.reduce(
+    (total, item) => total + Number(item.quantity || 0),
+    0
+  );
+
+  const wishlistCount = wishlistItems.length;
+
+  const closeMenu = () => setMenuOpen(false);
+
+  // Keep the search box synchronized with the URL, including after refresh.
+  useEffect(() => {
+    setSearchText(searchParams.get("query") || "");
+  }, [searchParams]);
+
+  // Navigate to live search results whenever the user types.
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchText(value);
+
+    if (value.trim()) {
+      navigate(`/search?query=${encodeURIComponent(value)}`, {
+        replace: true,
+      });
+    } else if (location.pathname === "/search") {
+      navigate("/search", { replace: true });
+    }
   };
 
+  // Enter also keeps the user on the search results page.
   const handleSearch = (event) => {
     event.preventDefault();
 
     const query = searchText.trim();
 
-    if (!query) return ;
-    navigate(`/search?query=${encodeURIComponent(query)}`);
-    setSearchText("");
-    closeMenu();
+    if (query) {
+      navigate(`/search?query=${encodeURIComponent(query)}`);
+      closeMenu();
+    }
   };
 
   return (
@@ -44,7 +74,7 @@ function Navbar() {
           className="menu-toggle"
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen((previous) => !previous)}
         >
           <span />
           <span />
@@ -76,28 +106,48 @@ function Navbar() {
                 placeholder="Search products..."
                 aria-label="Search products"
                 value={searchText}
-                onChange={(event) =>
-                  setSearchText(event.target.value)
-                }
+                onChange={handleSearchChange}
               />
+
+              {searchText && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  onClick={() => {
+                    setSearchText("");
+
+                    if (location.pathname === "/search") {
+                      navigate("/search", { replace: true });
+                    }
+                  }}
+                >
+                  ×
+                </button>
+              )}
             </form>
 
             <Link
               to="/wishlist"
-              className="nav-action"
-              aria-label="Wishlist"
+              className="nav-action wishlist-nav-link"
+              aria-label={`Wishlist, ${wishlistCount} items`}
               onClick={closeMenu}
             >
               ♡
+              {wishlistCount > 0 && (
+                <span className="wishlist-count">{wishlistCount}</span>
+              )}
             </Link>
 
             <Link
               to="/cart"
-              className="nav-action"
-              aria-label="Shopping cart"
+              className="nav-action cart-nav-link"
+              aria-label={`Shopping cart, ${cartCount} items`}
               onClick={closeMenu}
             >
               🛒
+              {cartCount > 0 && (
+                <span className="cart-count">{cartCount}</span>
+              )}
             </Link>
 
             <Link
